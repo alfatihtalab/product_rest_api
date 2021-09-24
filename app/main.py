@@ -167,5 +167,4 @@ def get_orders_user(id):
 # TODO get all order
 
 
-if __name__ == '__main__':
-    app.run()
+
