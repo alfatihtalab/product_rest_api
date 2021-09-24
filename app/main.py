@@ -3,9 +3,10 @@ from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
 # engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = \
-    os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+    os.environ.get(DATABASE_URL, 'sqlite:///data.db')
 #postgresql://postgres:1993239@localhost:5432/markt_db
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
