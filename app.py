@@ -1,10 +1,12 @@
+import os
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 # engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = \
-    'postgresql://postgres:1993239@localhost:5432/markt_db'
+    os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+#postgresql://postgres:1993239@localhost:5432/markt_db
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
