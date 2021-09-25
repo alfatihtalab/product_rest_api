@@ -59,14 +59,21 @@ def index():
 def add_user():
     if request.method == 'POST':
         user_data = request.get_json()
-        try:
-            user = User(id=user_data['id'])
-            db.session.add(user)
-            db.session.commit()
+        check_user = User.query.get(id=user_data['id'])
+        if check_user:
+            return jsonify(
+                {"message": 'user with an id '\
+                            '{0} has already found'.format(user_data['id'])
+                 })
+        else:
+            try:
+                user = User(id=user_data['id'])
+                db.session.add(user)
+                db.session.commit()
 
-        except:
-            return jsonify({'message': 'user not inserted'})
-        return jsonify(user_data['id'])
+            except:
+                return jsonify({'message': 'user not inserted'})
+            return jsonify(user_data['id'])
 
 
 # TODO get user by id
