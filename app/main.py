@@ -59,7 +59,7 @@ def index():
 def add_user():
     if request.method == 'POST':
         user_data = request.get_json()
-        check_user = User.query.filter_by(id=user_data['id'])
+        check_user = User.query.get(user_data['id'])
         if check_user:
             return jsonify(
                 {"message": 'user with an id '\
