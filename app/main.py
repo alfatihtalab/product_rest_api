@@ -1,14 +1,19 @@
 import os
+import re
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 # DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
 # engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get()
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://avnadmin:UXnAnZSuFIBO3G3n@pg-products-alfatihtalab7-5e0e.aivencloud.com:26020/defaultdb?sslmode=require'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://avnadmin:UXnAnZSuFIBO3G3n@pg-products-alfatihtalab7-5e0e.aivencloud.com:26020/defaultdb?sslmode=require'
 #postgresql://postgres:1993239@localhost:5432/markt_db
+
+db_uri = os.getenv("DATABASE_URL")  # or other relevant config var
+if db_uri.startswith("postgres://"):
+    db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
