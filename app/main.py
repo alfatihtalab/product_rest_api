@@ -79,6 +79,8 @@ def add_user():
 
             except:
                 return jsonify({'message': 'user not inserted'})
+            
+            db.session.close()
             return jsonify(user_data['id'])
 
 
@@ -108,6 +110,8 @@ def add_product():
 
         except:
             return jsonify({'message': 'user not inserted'})
+
+        db.session.close()
         return jsonify(product_data)
 
 
