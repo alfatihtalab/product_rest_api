@@ -128,7 +128,7 @@ def get_product(id):
 
 # TODO get all product
 @app.route('/products')
-async def get_all_products():
+def get_all_products():
     products = Product.query.all()
     product_list = []
     for p in products:
