@@ -109,7 +109,7 @@ def get_user(id):
 @app.route('/product', methods=['post'])
 async def add_product():
     if request.method == 'POST':
-        product_data = request.get_json()
+        product_data = await asyncio.create_task(request.get_json())
         try:
             product = Product(
                 name=product_data['name'],
