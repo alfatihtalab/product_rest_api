@@ -107,19 +107,19 @@ def get_user(id):
 
 # TODO add new product
 @app.route('/product', methods=['post'])
-async def add_product():
+def add_product():
     if request.method == 'POST':
-        product_data = await asyncio.create_task(request.get_json())
+        product_data = request.get_json()
         try:
             product = Product(
                 name=product_data['name'],
                 price=product_data['price'],
                 url=product_data['url'])
-            await asyncio.create_task(db.session.add(product))
+            db.session.add(product)
             db.session.commit()
 
         except:
-            return jsonify({'message': 'user not inserted'})
+            return jsonify({'message': 'product not inserted'})
 
         db.session.close()
         return jsonify(product_data)
