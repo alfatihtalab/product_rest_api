@@ -13,7 +13,7 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://avnadmin:UXnAnZSuFIBO3G3n@pg-products-alfatihtalab7-5e0e.aivencloud.com:26020/defaultdb?sslmode=require'
 #postgresql://postgres:1993239@localhost:5432/markt_db
 
-db_uri = os.environ.get("DB_URL")  # or other relevant config var
+db_uri = os.environ.get("DATABASE_URL")  # or other relevant config var
 if db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
