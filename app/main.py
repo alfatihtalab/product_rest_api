@@ -2,6 +2,8 @@ import os
 import asyncio
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 
 app = Flask(__name__)
 # DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
@@ -18,6 +20,8 @@ if db_uri.startswith("postgres://"):
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
 
 
 class Product(db.Model):
@@ -79,7 +83,7 @@ def add_user():
 
             except:
                 return jsonify({'message': 'user not inserted'})
-            
+
             db.session.close()
             return jsonify(user_data['id'])
 
@@ -97,7 +101,7 @@ def get_user(id):
 
 # TODO add new product
 @app.route('/product', methods=['post'])
-def add_product():
+async def add_product():
     if request.method == 'POST':
         product_data = request.get_json()
         try:
@@ -105,7 +109,7 @@ def add_product():
                 name=product_data['name'],
                 price=product_data['price'],
                 url=product_data['url'])
-            db.session.add(product)
+            await asyncio.create_task(db.session.add(product))
             db.session.commit()
 
         except:
@@ -132,8 +136,8 @@ def get_product(id):
 
 # TODO get all product
 @app.route('/products')
-def get_all_products():
-    products = Product.query.all()
+async def get_all_products():
+    products = await asyncio.create_task(Product.query.all())
     product_list = []
     for p in products:
         product = {}
