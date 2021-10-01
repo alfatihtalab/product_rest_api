@@ -182,7 +182,7 @@ def get_all_products():
                 product['url'] = str(p.url)
                 product_list.append(product)
 
-                return jsonify({'products': product_list})
+            return jsonify({'products': product_list})
         else:
             return jsonify({'message': 'no products'})
     except:
