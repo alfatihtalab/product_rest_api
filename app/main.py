@@ -145,7 +145,7 @@ def get_all_products():
     product_list = []
     try:
         products = Product.get.all()
-        if products:
+        if products is not None:
             for p in products:
                 product = {}
                 product['id'] = p.id
