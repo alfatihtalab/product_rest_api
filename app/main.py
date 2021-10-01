@@ -6,7 +6,8 @@ import psycopg2
 
 
 app = Flask(__name__)
-# DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
+
+DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
 # engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
@@ -20,7 +21,11 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-DATABASE_URL = os.environ['POST_DB']
+
+uri = os.getenv("DATABASE_URL")  # or other relevant config var
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+# rest of connection code using the connection string `uri`
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 db = SQLAlchemy(app)
