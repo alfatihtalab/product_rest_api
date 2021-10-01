@@ -103,13 +103,34 @@ def add_user():
 # TODO get user by id
 @app.route('/user/<string:id>')
 def get_user(id):
-    users = User.query.all()
-    for user in users:
-        if user.id == id:
-            # it must be serilized
-            return jsonify({'user': str(user.id)})
-    return jsonify({'message': 'user not found'})
+    try:
+        users = User.query.all()
+        if users:
+            for user in users:
+                if user.id == id:
+                    return jsonify({'user': str(user.id)})
+                else:
+                    return jsonify({'message': 'user with an id {0} not found'.format(id)})
 
+    except:
+        jsonify({'message': 'user not found'})
+
+# GET all users
+@app.route('/users')
+def get_users():
+    user_list = []
+    try:
+        users = User.query.all()
+        if users:
+            for u in users:
+                user = {}
+                user['id'] = u.id
+                user_list.append(user)
+            return jsonify({'users': user_list})
+        else:
+            return jsonify({'message': 'no users'})
+    except:
+        return jsonify({'message': 'error in fetching data'})
 
 # TODO add new product
 @app.route('/product', methods=['post'])
@@ -203,9 +224,25 @@ def get_orders_user(id):
         order_list.append(order)
     return jsonify({'orders': order_list})
 
-
-
 # TODO get all order
+@app.route('/orders')
+def get_orders():
+    order_list = []
+    try:
+        orders = Order.query.all()
+        if orders:
+            for o in orders:
+                order = {}
+                order['id'] = o.id
+                order['product_id'] = str(o.product_id)
+                order['product_count'] = str(o.product_count)
+                order_list.append(order)
+            return jsonify({'orders': order_list})
+        else:
+            return jsonify({'message': 'no orders'})
+
+    except:
+        return jsonify({'message': 'error in fetching data try again'})
 
 
 
