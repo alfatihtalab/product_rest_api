@@ -6,7 +6,6 @@ from flask_migrate import Migrate
 import psycopg2
 
 
-
 app = Flask(__name__)
 # DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
 # engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
@@ -143,7 +142,7 @@ def get_product(id):
 # TODO get all product
 @app.route('/products')
 async def get_all_products():
-    products = await asyncio.create_task(Product.query.all())
+    products = await Product.query.all()
     product_list = []
     for p in products:
         product = {}
