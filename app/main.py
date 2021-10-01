@@ -195,10 +195,10 @@ def add_order():
     if request.method == 'POST':
         order_data = request.get_json()
         try:
-            orders = Order.query.all()
+            orders = Order.query.fiter_by(user_id=order_data['user_id'])
             for o in orders:
-                if o.user_id == order_data['user_id'] and o.product_id == order_data['product_id']:
-                    return jsonify({'message': 'already ordered !!'})
+                if o.product_id == order_data['product_id']:
+                    break
                 else:
                     order = Order(
                         user_id=order_data['user_id'],
@@ -207,6 +207,7 @@ def add_order():
                     db.session.add(order)
                     db.session.commit()
                     return jsonify(order_data)
+            # return jsonify({'message': 'already ordered !!'})
         except:
             return jsonify({'message': 'order not inserted'})
 
