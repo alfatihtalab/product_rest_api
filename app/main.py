@@ -212,8 +212,8 @@ def add_order():
 # TODO get all orders belong to user
 @app.route('/orders/<string:id>')
 def get_orders_user(id):
-    orders = db.session.query(Order, Product.id, User.id)\
-        .join(Product).join(User).filter_by(user_id=id)
+    orders = db.session.query(Order, Product.id, User.id).filter_by(user_id=id)\
+        .join(Product).all()
     order_list = []
     for o in orders:
         order = {}
