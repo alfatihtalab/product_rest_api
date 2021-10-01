@@ -145,7 +145,7 @@ def get_all_products():
     product_list = []
     try:
         products = Product.get.all()
-        if products is not None:
+        if products:
             for p in products:
                 product = {}
                 product['id'] = p.id
@@ -153,12 +153,13 @@ def get_all_products():
                 product['price'] = str(p.price)
                 product['url'] = str(p.url)
                 product_list.append(product)
+
+                return jsonify({'products': product_list})
         else:
             return jsonify({'message': 'no products'})
     except:
         return jsonify({'message': 'error in fetching data'})
-    finally:
-        return jsonify({'products': product_list})
+
 
 
 # TODO add new order
