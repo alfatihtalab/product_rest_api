@@ -20,7 +20,7 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-DATABASE_URL = os.environ['DB_URL']
+DATABASE_URL = os.environ['POST_DB']
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 db = SQLAlchemy(app)
