@@ -211,15 +211,11 @@ def add_order():
 # TODO get all orders belong to user
 @app.route('/orders/<string:id>')
 def get_orders_user(id):
-    orders = Order.query.filter_by(user_id=id).join(Product.price).all()
+    orders = db.session.query(Order, Product).fulljoin(Product, Order.user_id == id).all()
     order_list = []
-    for o in orders:
-        order = {}
-        order['id'] = o.id
-        # order['user_id'] = o.user_id
-        order['product_price'] = o.price
-        order['product_id'] = str(o.product_id)
-        order['product_count'] = str(o.product_count)
+    for o, p in orders:
+        order = {'id': o.id, 'user_id': o.user_id, 'product_price': p.price, 'product_id': str(o.product_id),
+                 'product_count': str(o.product_count)}
 
         order_list.append(order)
     return jsonify({'orders': order_list})
