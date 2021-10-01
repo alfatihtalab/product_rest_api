@@ -138,11 +138,16 @@ def get_product(id):
 
     return jsonify({'message': 'product with an id {0} not found'.format(id)})
 
+# async function to get all products
+async def get_procucts():
+    task = await Product.query.all()
+    return task
+
 
 # TODO get all product
 @app.route('/products')
 async def get_all_products():
-    products = await Product.query.all()
+    products = await asyncio.create_task(get_procucts())
     product_list = []
     for p in products:
         product = {}
