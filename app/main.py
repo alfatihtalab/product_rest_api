@@ -144,7 +144,7 @@ def get_product(id):
 def get_all_products():
     product_list = []
     try:
-        products = Product.get.all()
+        products = Product.query.all()
         if products:
             for p in products:
                 product = {}
