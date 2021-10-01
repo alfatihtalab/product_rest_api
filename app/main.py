@@ -195,17 +195,21 @@ def add_order():
     if request.method == 'POST':
         order_data = request.get_json()
         try:
-            order = Order(
-                user_id=order_data['user_id'],
-                product_id=order_data['product_id'],
-                product_count=order_data['product_count'])
-            db.session.add(order)
-            db.session.commit()
-
+            orders = Order.query.all()
+            for o in orders:
+                if o.user_id == order_data['user_id'] and o.product_id == order_data['product_id']:
+                    return jsonify({'message': 'already ordered !!'})
+                else:
+                    order = Order(
+                        user_id=order_data['user_id'],
+                        product_id=order_data['product_id'],
+                        product_count=order_data['product_count'])
+                    db.session.add(order)
+                    db.session.commit()
+                    return jsonify(order_data)
         except:
-            return jsonify({'message': 'user not inserted'})
+            return jsonify({'message': 'order not inserted'})
 
-        return jsonify(order_data)
 
 
 # TODO get all orders belong to user
