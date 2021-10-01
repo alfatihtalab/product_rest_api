@@ -1,5 +1,4 @@
 import os
-import asyncio
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -138,27 +137,28 @@ def get_product(id):
 
     return jsonify({'message': 'product with an id {0} not found'.format(id)})
 
-# async function to get all products
-async def get_procucts():
-    task = await Product.query.all()
-    return task
 
 
 # TODO get all product
 @app.route('/products')
-async def get_all_products():
-    products = await asyncio.create_task(get_procucts())
+def get_all_products():
     product_list = []
-    for p in products:
-        product = {}
-        product['id'] = p.id
-        product['name'] = str(p.name)
-        product['price'] = str(p.price)
-        product['url'] = str(p.url)
-
-        product_list.append(product)
-
-    return jsonify({'products': product_list})
+    try:
+        products = Product.get.all()
+        if products:
+            for p in products:
+                product = {}
+                product['id'] = p.id
+                product['name'] = str(p.name)
+                product['price'] = str(p.price)
+                product['url'] = str(p.url)
+                product_list.append(product)
+        else:
+            return jsonify({'message': 'no products'})
+    except:
+        return jsonify({'message': 'error in fetching data'})
+    finally:
+        return jsonify({'products': product_list})
 
 
 # TODO add new order
