@@ -144,12 +144,11 @@ def add_product():
                 url=product_data['url'])
             db.session.add(product)
             db.session.commit()
-
+            db.session.close()
+            return jsonify(product_data)
         except:
             return jsonify({'message': 'product not inserted'})
 
-        db.session.close()
-        return jsonify(product_data)
 
 
 # TODO get product by id
