@@ -7,20 +7,6 @@ import psycopg2
 
 app = Flask(__name__)
 
-# DATABASE_URL = 'postgres://gjdepasfdadwsx:021d923f60469ee2b08de7ad2ecdc0815065678941248c553a6aad1ba247efda@ec2-3-221-243-122.compute-1.amazonaws.com:5432/dduopruoikpg4a'
-# engine = create_engine("sqlite+pysqlite:///:memory:", echo=True, future=True)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://avnadmin:UXnAnZSuFIBO3G3n@pg-products-alfatihtalab7-5e0e.aivencloud.com:26020/defaultdb?sslmode=require'
-#postgresql://postgres:1993239@localhost:5432/markt_db
-
-# db_uri = os.environ.get("DATABASE_URL")  # or other relevant config var
-# if db_uri.startswith("postgres://"):
-#     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
-#
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 
 uri = os.getenv("DATABASE_URL")  # or other relevant config var
 if uri.startswith("postgres://"):
@@ -132,8 +118,24 @@ def get_users():
     except:
         return jsonify({'message': 'error in fetching data'})
 
+# DELETE user by ID
+@app.route('/user/<string:id>', methods = ['DELETE'])
+def delete_user(id):
+    try:
+        user = User.query.filter_by(id = id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+
+            return jsonify({'message':'user with an id {0} has been deleted'.format(id)})
+        else:
+            return jsonify(
+                {'message': 'user with an id {0} is not found'.format(id)})
+    except:
+        return jsonify({'message': 'error please try again'})
+
 # TODO add new product
-@app.route('/product', methods=['post'])
+@app.route('/product', methods=['POST'])
 def add_product():
     if request.method == 'POST':
         product_data = request.get_json()
@@ -166,7 +168,6 @@ def get_product(id):
     return jsonify({'message': 'product with an id {0} not found'.format(id)})
 
 
-
 # TODO get all product
 @app.route('/products')
 def get_all_products():
@@ -187,7 +188,6 @@ def get_all_products():
             return jsonify({'message': 'no products'})
     except:
         return jsonify({'message': 'error in fetching data'})
-
 
 
 # TODO add new order
@@ -212,11 +212,15 @@ def add_order():
 # TODO get all orders belong to user
 @app.route('/orders/<string:id>')
 def get_orders_user(id):
-    orders = Order.query.filter_by(user_id = id)
+    orders = Order.query\
+        .join(User, Order.user_id == id)\
+        .join(Product, Order.product_id == Product.id).all()
     order_list = []
     for o in orders:
         order = {}
         order['id'] = o.id
+        order['user_id'] = o.user_id
+        order['product_price'] = o.price
         order['product_id'] = str(o.product_id)
         order['product_count'] = str(o.product_count)
 
